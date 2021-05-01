@@ -1,0 +1,123 @@
+CREATE DATABASE SAMPLE_DB;
+
+USE SAMPLE_DB;
+
+CREATE TABLE Pack_grades(
+Grade_id varchar(20),
+Grade_name varchar(25),
+Min_price float(6,2),
+Max_price float(8,2),
+PRIMARY KEY (Grade_id));
+
+desc Pack_grades;
+
+DROP TABLE Pack_grades;
+
+CREATE TABLE Sectors(
+Sector_id varchar(20),
+Sector_name varchar(30),
+PRIMARY KEY (Sector_id));
+
+desc Sectors;
+
+CREATE TABLE Packages(
+Pack_id varchar(20),
+speed int(10),
+Start_date date,
+Monthly_Payment float(12,2),
+Sector_id varchar(20),
+PRIMARY KEY (Pack_id),
+FOREIGN KEY (Sector_id) REFERENCES Sectors(Sector_id));
+
+desc Packages;
+
+CREATE TABLE Customers(
+Customer_id varchar(10),
+First_name varchar(15),
+Last_name varchar(15),
+Birth_date date,
+Join_date date,
+City varchar(20),
+Pack_id varchar(20),
+State varchar(15),
+PRIMARY KEY (Customer_id),
+FOREIGN KEY (Pack_id) REFERENCES Packages(Pack_id));
+
+desc Customers;
+
+
+
+INSERT INTO Pack_grades VALUES ('12','A',550.50,1000.75);
+INSERT INTO Pack_grades VALUES ('23','B',450.50,850.20);
+INSERT INTO Pack_grades VALUES ('34','C',400,720);
+INSERT INTO Pack_grades VALUES ('45','D',199.99,420.50);
+INSERT INTO Pack_grades VALUES ('56','E',69,125);
+
+select * from Pack_grades;
+
+INSERT INTO Sectors VALUES ('313','private');
+INSERT INTO Sectors VALUES ('113','business');
+INSERT INTO Sectors VALUES ('213','telecom');
+INSERT INTO Sectors VALUES ('013','govt');
+INSERT INTO Sectors VALUES ('413','IT');
+
+select * from Sectors;
+
+INSERT INTO Packages VALUES ('04',500,'2013/03/01',700.59,'313');
+INSERT INTO Packages VALUES ('02',300,'2006/05/04',420,'113');
+INSERT INTO Packages VALUES ('03',400,'2020/09/03',720,'213');
+INSERT INTO Packages VALUES ('01',200,'2015/11/06',69,'013');
+INSERT INTO Packages VALUES ('05',550,'2017/02/02',990.34,'413');
+INSERT INTO Packages VALUES ('10',400,'2018/02/02',800,'013');
+
+select * from Packages;
+
+INSERT INTO  Customers VALUES ('07','Raj','kashyap','1990/05/21','2016/11/03','Mumbai','01','Maharashtra');
+INSERT INTO  Customers VALUES ('102','Dev','Thakur','2003/02/01','2007,06/03','Sonepat','02','Haryana');
+INSERT INTO  Customers VALUES ('209','Sanjay','Singh','1995/06/12','2020,10/04','Chandigarh','03','Punjab');
+INSERT INTO  Customers VALUES ('50','Amit','kadyan','2001/10/19','2008/01/01','Gurugram','04','Haryana');
+INSERT INTO  Customers VALUES ('420','Ashish','Khatana','2000/05/17','2015,04/03','Noida','05','UP');
+
+select * from Customers;
+
+
+
+
+
+select c.First_name,c.Last_name,c.Pack_id,p.speed
+from Customers as c,Packages as p
+where c.Pack_id = p.Pack_id;
+
+select	c.first_name,c.last_name,c.Pack_id,p.speed
+from Customers as c inner join Packages as p on c.Pack_id = p.Pack_id
+where c.Pack_id in(22, 27)
+ORDER BY last_name ASC;
+
+select p.Pack_id,p.speed,p.Monthly_payment,s.Sector_name
+from Packages as p inner join Sectors as s on p.Sector_id = s.Sector_id;
+
+select c.First_name, c.Last_name, c.Pack_id, p.speed, p.Monthly_payment, s.Sector_name
+from  Customers as c inner join Packages as p on c.Pack_id = c.Pack_id inner join Sectors as s on p.Sector_id = s.Sector_id ;
+
+select	c.First_name, c.Last_name, p.Pack_id, p.speed, p.Monthly_payment, s.Sector_name
+from Customers as c inner join Packages as p on c.Pack_id = p.Pack_id inner join Sectors as s on p.Sector_id = s.Sector_id
+where s.Sector_name = 'business';				
+
+select c.First_name, c.Join_date, p.Pack_id, p.speed, s.Sector_name
+from Customers as c inner join Packages as p on c.Pack_id = p.Pack_id inner join Sectors as s on p.Sector_id = s.Sector_id
+where s.Sector_name = 'private' and extract(year from join_date) = 2008;
+
+//missing query 7
+
+select c.First_name, c.Last_name, p.speed, p.Monthly_payment
+from Customers as c inner join Packages as p on c.Pack_id = p.Pack_id;
+
+select a.First_name, a.Last_name, a.Pack_id
+from Customers as a inner join Customers as b on b.First_name = 'Dev' and b.Last_name = 'Thakur' and a.Pack_id = b.Pack_id;
+
+select a.Last_name, a.First_name , c.Monthly_Payment
+from Customers as a inner join Packages as c on a.Customer_id = 209;
+
+select p.Pack_id, p.speed
+from Packages as p inner join Packages as b on b.Pack_id = 10 and p.speed = b.speed;
+
