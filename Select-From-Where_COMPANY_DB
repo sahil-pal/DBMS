@@ -1,0 +1,44 @@
+use COMPANY;
+
+select bdate, Address
+from EMPLOYEE
+where Fname = "John" and minit = "B" and Lname = "Smith";
+
+select Fname,minit,Lname,Address 
+from EMPLOYEE , DEPARTMENT
+where Dname = "Research" and Dnumber = Dno;
+
+select Pnumber,Dnumber,Lname,Address,bdate
+from PROJECT,DEPARTMENT,EMPLOYEE
+where Plocation="Stafford" and Dnum = Dnumber and Mgr_Ssn = Ssn;
+
+select Ssn,Dname
+from EMPLOYEE,DEPARTMENT;
+
+select * 
+from EMPLOYEE
+where Dno = 5;
+
+select distinct Salary
+from EMPLOYEE;
+
+select distinct Pnumber
+from PROJECT,EMPLOYEE,DEPARTMENT
+where Lname='Smith' and Dno = Dnumber and Dnumber=Dnum;
+
+Select * 
+from EMPLOYEE
+where Address LIKE '%Houston, TX';
+
+select * 
+from EMPLOYEE
+where bdate BETWEEN 1950 and 1960;
+
+select Salary as Previous_Salary, Salary*1.1 as Increased_Salary
+FROM EMPLOYEE,DEPARTMENT,PROJECT
+where Pname="ProductX" and Dnum = Dnumber and Dnumber = Dno;
+
+select Fname,minit,Lname,Pname,Dno
+FROM EMPLOYEE,DEPARTMENT,PROJECT
+where Dno = Dnumber and Dnumber = Dnum
+ORDER BY Dno,Lname,Fname;
