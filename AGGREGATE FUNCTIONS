@@ -1,0 +1,43 @@
+select MAX(salary), MIN(salary), AVG(Salary)
+from EMPLOYEE;
+
+select MAX(salary), MIN(salary), AVG(Salary)
+from (EMPLOYEE JOIN DEPARTMENT ON Dno= Dnumber)
+where Dname='Research';
+
+select COUNT( * )
+FROM EMPLOYEE,DEPARTMENT
+WHERE Dno=Dnumber AND Dname='Research';
+
+select COUNT(DISTINCT Salary)
+from EMPLOYEE;
+
+select Lname, Fname
+from EMPLOYEE
+where ( select COUNT(*)
+		from DEPENDENT
+		where Ssn=Essn ) >= 2;
+        
+select Dno, COUNT(*), AVG(Salary)
+from EMPLOYEE
+GROUP BY Dno;
+
+select Pnumber,Pname,COUNT(*)
+from PROJECT,WORKS_ON
+where Pnumber = Pno
+GROUP BY Pnumber, Pname;
+
+select Pnumber, Pname, COUNT(*)
+from PROJECT,WORKS_ON
+where Pnumber = Pno
+GROUP BY Pnumber, Pname
+HAVING COUNT(*) > 1;
+
+select Pnumber,Pname,COUNT(*)
+from PROJECT,WORKS_ON,EMPLOYEE
+where Pnumber = Pno AND Ssn = Essn AND Dno = 5
+GROUP BY Pnumber,Pname;
+
+select Dnumber, COUNT(*)
+from DEPARTMENT,EMPLOYEE
+where Dnumber = Dno AND Salary > 40000 AND ( select Dno from EMPLOYEE GROUP BY Dno HAVING COUNT(*) > 4);
