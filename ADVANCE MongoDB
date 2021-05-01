@@ -1,0 +1,14 @@
+1. db.PROJECT.insertMany([{Pname:"ProductA",Pnumber:2,Plocation:{city:"gurgram",state:"haryana"},Dnum:5},
+	... {Pname:"SpaceY",Pnumber:7,Plocation:{city:"Noida",state:"Haryana"},Dnum:2}]);
+
+2. db.PROJECT.find();
+
+3. db.PROJECT.update({Pname:”SpaceY"},{$set:{Plocation:{city:"Pune",state:"Maharashtra"},Dnum:20}});
+
+4. db.PROJECT.remove({Dnum:4});
+
+5. db.PROJECT.insert({Pname:"ProductZ",Pnumber:9,Plocation:["Delhi","Mumbai"],Dnum:15,
+... ... ... Department:[{Dname:"ElectricCars",Dnumber:4,Mgr_Ssn:332445555,Mgr_start_date:1990},
+... ... {Dname:"LaserMisiles",Dnumber:4,Mgr_Ssn:337445555,Mgr_start_date:1990}]})
+
+6. db.PROJECT.find({"Department.Mgr_Ssn":332445555}).pretty();
