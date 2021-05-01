@@ -1,0 +1,51 @@
+use COMPANY;
+
+select Fname,Lname
+from EMPLOYEE
+where SuperSsn IS NULL;
+
+Select DISTINCT Pnumber
+from PROJECT 
+where Pnumber IN 
+			(select Pnumber from PROJECT,DEPARTMENT,EMPLOYEE where Dnum = Dnumber and Mgr_Ssn = Ssn and Lname='Smith')
+			  OR
+	  Pnumber IN
+             (select Pnumber from WORKS_ON,EMPLOYEE where Essn=Ssn and Lname='Smith' and Pnumber=Pno);
+             
+select DISTINCT ESSN 
+from WORKS_ON 
+where (Pno,Hours) IN (select Pno,Hours from WORKS_ON where Essn='999887777');
+
+select Fname,Lname 
+from EMPLOYEE
+where Salary > ALL ( select Salary from EMPLOYEE where Dno='5');
+
+//4 
+select E.Fname,E.minit,E.Lname
+from EMPLOYEE AS E
+where E.Ssn IN (Select Essn FROM DEPENDENT as D where E.Fname = D.Dependent_name and E.Sex=D.Sex);
+
+select E.Fname,E.minit,E.Lname
+from EMPLOYEE AS E
+where EXISTS (Select * FROM DEPENDENT as D where E.Fname = D.Dependent_name and E.Sex=D.Sex);
+
+//5
+select E.Fname,E.minit,E.Lname
+from EMPLOYEE AS E
+where NOT EXISTS (Select * from DEPENDENT as D where E.Fname=D.Dependent_name and E.Sex=D.Sex);
+
+select Fname, Lname 
+from EMPLOYEE 
+where EXISTS ( select * from DEPENDENT where Ssn=Essn )
+AND EXISTS ( select * from DEPARTMENT where Ssn=Mgr_ssn ); 
+
+select Fname,Lname 
+from EMPLOYEE 
+where NOT EXISTS (( select Pnumber from PROJECT where Dnum=5) EXCEPT ( select Pno from WORKS_ON where Ssn=Essn));
+
+select Lname, Fname
+from EMPLOYEE
+where ( select COUNT(*)
+		from DEPENDENT
+		where Ssn=Essn ) >= 2;
+        
