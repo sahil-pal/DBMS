@@ -1,0 +1,71 @@
+use COMPANY;
+
+db.createCollection("EMPLOYEE");
+
+db.EMPLOYEE.insertOne({Fname:"John",minit:"B",Lname:"Smith",Ssn:123456789,bdate:1965-01-09,Address:"731 Fondren, Houston, TX",Sex:"M",Salary:30000,SuperSsn:333445555,Dno:5});
+ db.EMPLOYEE.insertMany([{Fname:"Franklin",minit:"T",Lname:"Wong",Ssn:333445555,bdate:1995-12-08,Address:"638 Vose, Houston, TX",Sex:"M",Salary:40000,SuperSsn:888665555,Dno:5},
+... {Fname:"Sahil",minit:"J",Lname:"Pal",Ssn:999887777,bdate:2001-09-07,Address:"Sector-45, Gurugram, Haryana",Sex:"M",Salary:65000,SuperSsn:987654321,Dno:4},
+... {Fname:"Ritik",minit:"K",Lname:"Singh",Ssn:987654321,bdate:2000-05-12,Address:"Sector-9 Sohna, Haryana",Sex:"M",Salary:70000,SuperSsn:123456789,Dno:3},
+... {Fname:"Rajesh",minit:"P",Lname:"Kumar",Ssn:345455455,bdate:1993-01-01,Address:"Sector 10, NewGurugram, Haryana”,Sex:"M",Salary:40000,SuperSsn:987654321,Dno:4}]);
+db.EMPLOYEE.find();
+
+
+db.createCollection(“DEPARTMENT");
+
+db.DEPARTMENT.insertMany([{Dname:"Research",Dnumber:5,Mgr_Ssn:333445555,Mgr_start_date:1988-05-22},
+... {Dname:"Administration",Dnumber:4,Mgr_Ssn:987654321,Mgr_start_date:1995-01-01},
+... {Dname:”HeadQuarters",Dnumber:3,Mgr_Ssn:999887777,Mgr_start_date:1981-06-19}]);
+db.DEPARTMENT.find();
+
+
+db.createCollection(“DEPENDENT");
+
+db.DEPENDENT.insertMany([{Essn:123456789,Dependent_name:"Alice",Sex:"F",Bdate:1986-04-05,Relationship:"Daughter"},
+... {Essn:999887777,Dependent_name:"Sam",Sex:"M",Bdate:1999-01-01,Relationship:"Son"},
+... {Essn:345455455,Dependent_name:”Rishit”,Sex:"M",Bdate:2002-04-05,Relationship:"Son"}]);
+db.DEPENDENT.find();
+
+
+db.createCollection("DEPT_LOCATIONS");
+
+db.DEPT_LOCATIONS.insertMany([{Dnumber:1,Dlocation:"Houston"},
+... {Dnumber:3,Dlocation:"Houston"},
+... {Dnumber:4,Dlocation:"Stafford"},
+... {Dnumber:5,Dlocation:”Bellaire”}]);
+db.DEPT_LOCATIONS.find();
+
+
+db.createCollection("PROJECT");
+
+db.PROJECT.insertMany([{Pname:"ProductX",Pnumber:1,Plocation:"Bellaire",Dnum:5},
+... {Pname:"SpaceX",Pnumber:7,Plocation:"Texas",Dnum:5},
+... {Pname:"Computerization",Pnumber:10,Plocation:"Stafford",Dnum:4},
+... {Pname:”NewBenefits”,Pnumber:30,Plocation:"Houston",Dnum:3}]);
+db.PROJECT.find();
+
+
+db.createCollection(“WORKS_ON");
+
+db.WORKS_ON.insertMany([{Essn:123456789,Pno:1,Hours:32.50},
+... {Essn:999887777,Pno:7,Hours:15.30},
+... {Essn:345455455,Pno:10,Hours:21.20}]);
+db.WORKS_ON.find();
+
+
+
+
+4. db.PROJECT.find({Dnum:5});
+
+5. db.PROJECT.findOne({Dnum:5});
+
+6. db.PROJECT.find({Dnum:5,Pname:”ProductX"}).pretty();
+
+7. db.PROJECT.find({$or:[{Dnum:5},{Pname:”NewBenefits"}]},{Plocation:0,_id:0})
+
+
+8. db.PROJECT.find({$or: [{$and: [{Dnum:{$lt:5}}, {Pname:"NewBenefits"}]}, 
+... ... {Plocation:”Texas"}]}).pretty()
+
+
+
+
