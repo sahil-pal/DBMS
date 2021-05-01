@@ -1,0 +1,103 @@
+CREATE DATABASE COMPANY;
+USE COMPANY;
+
+CREATE TABLE DEPARTMENT(
+ Dname varchar(25),
+ Dnumber char(1) NOT NULL,
+ Mgr_Ssn integer(9),
+ Mgr_start_date integer(8),
+ PRIMARY KEY(Dnumber)
+ );
+ 
+ CREATE TABLE DEPT_LOCATIONS(
+ Dnumber char(1) NOT NULL,
+ Dlocation varchar(15) NOT NULL,
+ PRIMARY KEY (Dnumber,Dlocation),
+ FOREIGN KEY (Dnumber) REFERENCES DEPARTMENT(Dnumber)
+ );
+
+CREATE TABLE PROJECT(
+Pname varchar(30),
+Pnumber integer(3) NOT NULL,
+Plocation varchar(15),
+Dnum char(1),
+PRIMARY KEY (Pnumber),
+FOREIGN KEY (Dnum) REFERENCES DEPARTMENT (Dnumber)
+);
+
+CREATE TABLE EMPLOYEE(
+Fname varchar(25),
+minit Char(1),
+Lname varchar(20),
+Ssn integer(9) NOT NULL,
+bdate integer(8),
+Address varchar(60),
+Sex Char(1),
+Salary integer(11),
+SuperSsn integer(9),
+Dno char(1),
+PRIMARY KEY (Ssn),
+FOREIGN KEY (Dno) REFERENCES DEPARTMENT (Dnumber)
+);
+
+CREATE TABLE WORKS_ON(
+Essn integer(9) NOT NULL,
+Pno integer(3) NOT NULL,
+Hours decimal(4,2),
+PRIMARY KEY(Essn,Pno),
+FOREIGN KEY(Essn) REFERENCES EMPLOYEE(Ssn),
+FOREIGN KEY(Pno) REFERENCES PROJECT(Pnumber)
+);
+
+CREATE TABLE DEPENDENT(
+Essn integer(9) NOT NULL,
+Dependent_name varchar(15) NOT NULL,
+Sex char(1),
+Bdate integer(8),
+Relationship varchar(15),
+PRIMARY KEY(Essn,Dependent_name),
+FOREIGN KEY(Essn) REFERENCES EMPLOYEE(Ssn)
+);
+
+desc DEPARTMENT;
+insert into DEPARTMENT values('Research',5,333445555,1988-05-22);
+insert into DEPARTMENT values('Administration',4,987654321,1995-01-01);
+insert into DEPARTMENT values('HeadQuarters',1,888665555,1981-06-19);
+select * from DEPARTMENT;
+
+desc EMPLOYEE;
+insert into EMPLOYEE values('John','B','Smith','123456789',1965-01-09,'731 Fondren, Houston, TX','M',30000,333445555,5);
+insert into EMPLOYEE values('Ajay','B','Smith','343743874',1965-05-23,'731 Fondren, Houston, TX','M',30000,333445555,5);
+insert into EMPLOYEE values('Franklin','T','Wong','333445555',1995-12-08,'638 Vose, Houston, TX','M',40000,888665555,5);
+insert into EMPLOYEE values('Sahil','J','Pal','999887777',2000-01-01,'Sector 45, Gurugram, Haryana','M',25000,987654321,4);
+insert into EMPLOYEE values('Rajesh','P','Kumar','345455455',1993-01-01,'Sector 10, NewGurugram, Haryana','M',80000,NULL,1);
+insert into EMPLOYEE values('Ritik','K','Singh','987654321',2000-05-12,'Sector 9, Sohna, Haryana','M',50000,987654321,4);
+select * from EMPLOYEE;
+
+desc DEPENDENT;
+insert into DEPENDENT values(333445555,'Alice','F',1986-04-05,'Daughter');
+insert into DEPENDENT values(333445555,'Joy','M',1958-05-03,'Son');
+insert into DEPENDENT values(999887777,'Sahil','M',1999-01-01,'Brother');
+insert into DEPENDENT values(123456789,'Michael','m',2002-04-05,'Son');
+select * from DEPENDENT;
+
+desc DEPT_LOCATIONS;
+insert into DEPT_LOCATIONS values('1','Houston');
+insert into DEPT_LOCATIONS values('4','Stafford');
+insert into DEPT_LOCATIONS values('5','Bellaire');
+select * from DEPT_LOCATIONS;
+
+desc PROJECT;
+insert into PROJECT values('ProductX',1,'Bellaire',5);
+insert into PROJECT values('SpaceX',7,'Texas',5);
+insert into PROJECT values('Computerization',10,'Stafford','4');
+insert into PROJECT values('NewBenefits',30,'Houston','1');
+select * from PROJECT;
+
+desc WORKS_ON;
+insert into WORKS_ON values(123456789,1,32.50);
+insert into WORKS_ON values(333445555,10,7.50);
+insert into WORKS_ON values(999887777,30,40.00);
+insert into WORKS_ON values(987654321,30,40.00);
+
+select * from WORKS_ON;
