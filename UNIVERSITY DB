@@ -1,0 +1,348 @@
+CREATE DATABASE UNIVERSITY;
+
+USE UNIVERSITY;
+
+CREATE TABLE classroom(
+building int(2) NOT NULL,
+room_number int(3) NOT NULL,
+capacity int(6),
+PRIMARY KEY (building,room_number));
+desc classroom;
+
+CREATE TABLE department(
+dept_name varchar(25) NOT NULL,
+building int(2),
+budget float(10,2),
+PRIMARY KEY (dept_name),
+FOREIGN KEY (building) REFERENCES classroom(building));
+desc department;
+
+CREATE TABLE course(
+course_id varchar(6) NOT NULL,
+title varchar(30),
+dept_name varchar(25),
+credits int(1),
+PRIMARY KEY(course_id));
+desc course;
+
+CREATE TABLE instructor(
+ID varchar(8) NOT NULL,
+name varchar(15),
+dept_name varchar(25),
+salary float(7,2),
+PRIMARY KEY (ID),
+FOREIGN KEY (dept_name) REFERENCES department(dept_name));
+desc instructor;
+
+CREATE TABLE section(
+course_id varchar(6) NOT NULL,
+sec_id varchar(5) NOT NULL,
+semester int(1) NOT NULL,
+year int(1) NOT NULL,
+building int(2),
+room_number int(3),
+time_slot_id varchar(6),
+PRIMARY KEY(course_id, sec_id, semester, year));
+desc section;
+
+CREATE TABLE teaches(
+ID varchar(8) NOT NULL,
+course_id varchar(6) NOT NULL,
+sec_id varchar(5) NOT NULL,
+semester int(1) NOT NULL,
+year int(1) NOT NULL,
+PRIMARY KEY (ID, course_id, sec_id, semester, year));
+desc teaches;
+
+CREATE TABLE student(
+ID varchar(8) NOT NULL,
+name varchar(25),
+dept_name varchar(25),
+tot_credit int(3),
+PRIMARY KEY (ID));
+desc student;
+
+CREATE TABLE takes(
+ID varchar(8) NOT NULL,
+course_id varchar(6) NOT NULL,
+sec_id varchar(5) NOT NULL,
+semester int(1) NOT NULL,
+year int(1) NOT NULL,
+grade char(1),
+PRIMARY KEY (ID, course_id, sec_id, semester, year));
+desc takes;
+
+CREATE TABLE advisor(
+s_ID varchar(8) NOT NULL,
+i_ID varchar(8),
+PRIMARY KEY (s_ID));
+desc advisor;
+
+CREATE TABLE time_slot(
+time_slot_id varchar(6) NOT NULL,
+day varchar(15) NOT NULL,
+start_time varchar(5) NOT NULL,
+end_tiem varchar(5),
+PRIMARY KEY (time_slot_id, day, start_time));
+desc time_slot;
+
+CREATE TABLE prereq(
+course_id varchar(6) NOT NULL,
+prereq_id varchar(6) NOT NULL,
+PRIMARY KEY (course_id, prereq_id));
+desc prereq;
+
+ALTER TABLE prereq 
+ADD FOREIGN KEY (course_id) REFERENCES course(course_id);
+
+ALTER TABLE takes
+ADD FOREIGN KEY (course_id,sec_id,semester,year) REFERENCES section(course_id,sec_id,semester,year),
+ADD FOREIGN KEY (ID) REFERENCES instructor(ID),
+ADD FOREIGN KEY (course_id) REFERENCES course(course_id);
+
+ALTER TABLE advisor
+ADD FOREIGN KEY (s_ID) REFERENCES student(ID);
+
+ALTER TABLE teaches
+ADD FOREIGN KEY (ID) REFERENCES instructor(ID),
+ADD FOREIGN KEY (course_id,sec_id,semester,year) REFERENCES section(course_id,sec_id,semester,year),
+ADD FOREIGN KEY (course_id) REFERENCES course (course_id);
+
+
+INSERT INTO classroom VALUES (1,101,20);
+INSERT INTO classroom VALUES (1,201,50);
+INSERT INTO classroom VALUES (1,102,20);
+INSERT INTO classroom VALUES (1,202,50);
+INSERT INTO classroom VALUES (1,103,20);
+INSERT INTO classroom VALUES (1,203,50);
+INSERT INTO classroom VALUES (2,101,45);
+INSERT INTO classroom VALUES (2,201,45);
+INSERT INTO classroom VALUES (3,101,45);
+INSERT INTO classroom VALUES (3,201,45);
+INSERT INTO classroom VALUES (4,101,20);
+INSERT INTO classroom VALUES (4,201,50);
+select * from classroom;
+
+INSERT INTO department VALUES('BTECH-CSE',1,500000);
+INSERT INTO department VALUES('BTECH-ME',1,400000);
+INSERT INTO department VALUES('BTECH-ECE',1,300000);
+INSERT INTO department VALUES('BTECH-CE',1,200000);
+INSERT INTO department VALUES('BBA-I',2,450000);
+INSERT INTO department VALUES('BBA-II',2,350000);
+INSERT INTO department VALUES('LLB-I',3,550000);
+INSERT INTO department VALUES('LLB-II',3,400000);
+INSERT INTO department VALUES('MTECH-CSE',4,750000);
+INSERT INTO department VALUES('MTECH-ME',4,600000);
+INSERT INTO department VALUES('MTECH-ECE',4,400000);
+INSERT INTO department VALUES('MTECH-CE',4,300000);
+select * from department;
+
+INSERT INTO course VALUES('CSL001','Programming in JAVA','BTECH-CSE',5);
+INSERT INTO course VALUES('CSL002','Database Management','BTECH-CSE',3);
+INSERT INTO course VALUES('ML001','Mecahnical Drawing','BTECH-ME',5);
+INSERT INTO course VALUES('ML002','Engines And Boilers','BTECH-ME',3);
+INSERT INTO course VALUES('ECEL01','Transistors','BTECH-ECE',5);
+INSERT INTO course VALUES('ECEL02','Diodes','BTECH-ECE',3);
+INSERT INTO course VALUES('CE001','Surveying And Leveling','BTECH-CE',5);
+INSERT INTO course VALUES('CE002','Soil Mechanics','BTECH-CE',3);
+INSERT INTO course VALUES('BBA001','Principles of Management','BBA-I',5);
+INSERT INTO course VALUES('BBA002','Principles of Economics','BBA-II',3);
+INSERT INTO course VALUES('LLB001','Code of criminal procedure','LLB-I',5);
+INSERT INTO course VALUES('LLB002','Ethics and Values','LLB-II',3);
+INSERT INTO course VALUES('CSL003','Advanced OS','MTECH-CSE',5);
+INSERT INTO course VALUES('CSL004','Adv Networking Sys.','MTECH-CSE',3);
+INSERT INTO course VALUES('ML003','Adv Mecahnical Drawing','MTECH-ME',5);
+INSERT INTO course VALUES('ML004','Adv Engines And Boilers','MTECH-ME',3);
+INSERT INTO course VALUES('ECEL03','Adv Transistors','MTECH-ECE',5);
+INSERT INTO course VALUES('ECEL04','Adv Diodes','MTECH-ECE',3);
+INSERT INTO course VALUES('CE003','Adv Surveying And Leveling','MTECH-CE',5);
+INSERT INTO course VALUES('CE004','Adv Soil Mechanics','MTECH-CE',3);
+INSERT INTO course VALUES('CSL005','Programming in C Language','BTECH-CSE',5);
+INSERT INTO course VALUES('CSL006','Basics of CN','BTECH-CSE',3);
+INSERT INTO course VALUES('BBA003','Elementary Eco','BBA-I',3);
+INSERT INTO course VALUES('ML005','Mechanics','BTECH-ME',5);
+INSERT INTO course VALUES('LLB003','Constitution Rights','LLB-I',5);
+select * from course;
+
+INSERT INTO instructor VALUES('CSE010','Sumit Kumar','BTECH-CSE',90000);
+INSERT INTO instructor VALUES('CSE020','kanika Gupta','BTECH-CSE',98000);
+INSERT INTO instructor VALUES('CSE040','Hemant ','MTECH-CSE',98000);
+INSERT INTO instructor VALUES('CSE030','Ramesh Singh','MTECH-CSE',95000);
+INSERT INTO instructor VALUES('ME010','Aman Jangra','BTECH-ME',85000);
+INSERT INTO instructor VALUES('ME030','Ankush Jain','BTECH-ME',95000);
+INSERT INTO instructor VALUES('ME020','Vaishnavi Yadav','MTECH-ME',98000);
+INSERT INTO instructor VALUES('ECE010','Hitesh Sharma','BTECH-ECE',85000);
+INSERT INTO instructor VALUES('ECE020','Anikt kumar','MTECH-ECE',98000);
+INSERT INTO instructor VALUES('CE010','Promod Baisla','BTECH-CE',88000);
+INSERT INTO instructor VALUES('CE020','Ravinder Dutt','MTECH-CE',97000);
+INSERT INTO instructor VALUES('BBA010','Rajiv chauhan','BBA-I',75000);
+INSERT INTO instructor VALUES('BBA020','Reena Singh','BBA-II',70000);
+INSERT INTO instructor VALUES('LLB010','Neeraj rao','LLB-I',96500);
+INSERT INTO instructor VALUES('LLB020','Kashish Verma','LLB-II',85000);
+select * from instructor;
+
+INSERT INTO section VALUES('CSL001','FS-A1',3,2020,1,101,'1');
+INSERT INTO section VALUES('CSL002','DS-A',4,2021,1,102,'4');
+INSERT INTO section VALUES('CSL001','CS-E',4,2021,1,103,'3');
+INSERT INTO section VALUES('ML001','ME-C',6,2019,1,201,'1');
+INSERT INTO section VALUES('ECEL02','ECE-D',4,2021,1,202,'4');
+INSERT INTO section VALUES('BBA001','BBA-A',3,2020,2,101,'6');
+INSERT INTO section VALUES('BBA002','BBA-B',4,2021,2,201,'8');
+INSERT INTO section VALUES('BBA002','BBA-A',1,2019,2,101,'9');
+INSERT INTO section VALUES('LLB001','LLB-A',2,2020,3,201,'7');
+INSERT INTO section VALUES('LLB002','LLB-B',4,2021,3,201,'6');
+INSERT INTO section VALUES('LLB002','LLB-B',2,2020,3,101,'8');
+INSERT INTO section VALUES('CSL003','FS-A1',1,2019,4,101,'3');
+INSERT INTO section VALUES('CSL004','DS-A',2,2020,4,102,'5');
+INSERT INTO section VALUES('CSL004','CS-E',3,2020,4,103,'4');
+INSERT INTO section VALUES('ML003','ME-C',4,2020,4,201,'2');
+INSERT INTO section VALUES('ML004','ME-D',6,2021,4,202,'2');
+INSERT INTO section VALUES('ECEL03','ECE-A',1,2019,4,203,'1');
+INSERT INTO section VALUES('CE004','CE-C',2,2020,4,101,'6');
+select * from section;
+
+INSERT INTO teaches VALUES('CSE010','CSL001','FS-A1',3,2020);
+INSERT INTO teaches VALUES('CSE020','CSL002','DS-A',4,2021);
+INSERT INTO teaches VALUES('CSE030','CSL003','FS-A1',1,2019);
+INSERT INTO teaches VALUES('CSE040','CSL004','DS-A',2,2020);
+INSERT INTO teaches VALUES('CSE040','CSL004','CS-E',3,2020);
+INSERT INTO teaches VALUES('ME030','ML001','ME-C',6,2019);
+INSERT INTO teaches VALUES('ME020','ML004','ME-D',6,2021);
+INSERT INTO teaches VALUES('ECE010','ECEL02','ECE-D',4,2021);
+INSERT INTO teaches VALUES('ECE020','ECEL03','ECE-A',1,2019);
+INSERT INTO teaches VALUES('BBA010','BBA001','BBA-A',3,2020);
+INSERT INTO teaches VALUES('BBA020','BBA002','BBA-B',4,2021);
+INSERT INTO teaches VALUES('BBA020','BBA002','BBA-A',1,2019);
+INSERT INTO teaches VALUES('LLB010','LLB001','LLB-A',2,2020);
+INSERT INTO teaches VALUES('LLB020','LLB002','LLB-B',4,2021);
+INSERT INTO teaches VALUES('LLB020','LLB002','LLB-B',2,2020);
+select * from teaches;
+
+INSERT INTO student VALUES('19BCS010','Ankit Yadav','BTECH-CSE',255);
+INSERT INTO student VALUES('19BCS020','Ridhika','BTECH-CSE',255);
+INSERT INTO student VALUES('20BCS030','Ritik Rai','BTECH-CSE',255);
+INSERT INTO student VALUES('18BME005','Abhishek singh','BTECH-ME',245);
+INSERT INTO student VALUES('20BEC010','Ritika Gulati','BTECH-ECE',250);
+INSERT INTO student VALUES('19BBA021','Parikshit','BBA-I',230);
+INSERT INTO student VALUES('19BBA051','Venkatesh','BBA-II',230);
+INSERT INTO student VALUES('20BBA010','Rishabh','BBA-I',230);
+INSERT INTO student VALUES('18LLB011','Devender Rao','LLB-I',250);
+INSERT INTO student VALUES('19LLB010','Venkatesh','LLB-II',250);
+INSERT INTO student VALUES('20LLB020','Ashish Khattana','LLB-I',250);
+INSERT INTO student VALUES('19MCS010','Amit Sharma','MTECH-CSE',265);
+INSERT INTO student VALUES('19MCS020','Sakshi ','MTECH-CSE',265);
+INSERT INTO student VALUES('20MCS012','Geetika','MTECH-CSE',265);
+INSERT INTO student VALUES('20MME002','Abhishek Patra','MTECH-ME',260);
+INSERT INTO student VALUES('20MME010','Rishit ','MTECH-ME',260);
+INSERT INTO student VALUES('20MEC040','Akash verma ','MTECH-ECE',265);
+INSERT INTO student VALUES('19MEC011','Vanshika Sharma ','MTECH-ECE',265);
+select * from student;
+
+INSERT INTO takes VALUES('CSE010','CSL001','FS-A1',3,2020,'A');
+INSERT INTO takes VALUES('CSE010','CSL001','CS-E',4,2021,'B');
+INSERT INTO takes VALUES('CSE020','CSL002','DS-A',4,2021,'A');
+INSERT INTO takes VALUES('ME010','ML001','ME-C',6,2019,'B');
+INSERT INTO takes VALUES('ECE010','ECEL02','ECE-D',4,2021,'A');
+INSERT INTO takes VALUES('BBA020','BBA001','BBA-A',3,2020,'B');
+INSERT INTO takes VALUES('BBA010','BBA002','BBA-B',4,2021,'A');
+INSERT INTO takes VALUES('BBA010','BBA002','BBA-A',1,2019,'A');
+INSERT INTO takes VALUES('LLB010','LLB001','LLB-A',2,2020,'B');
+INSERT INTO takes VALUES('LLB020','LLB002','LLB-B',4,2021,'B');
+INSERT INTO takes VALUES('LLB020','LLB002','LLB-B',2,2020,'A');
+INSERT INTO takes VALUES('CSE030','CSL003','FS-A1',1,2019,'A');
+INSERT INTO takes VALUES('CSE040','CSL004','DS-A',2,2020,'A');
+INSERT INTO takes VALUES('CSE040','CSL004','CS-E',3,2020,'B');
+INSERT INTO takes VALUES('ME020','ML003','ME-C',4,2020,'B');
+INSERT INTO takes VALUES('ME020','ML004','ME-D',6,2021,'A');
+INSERT INTO takes VALUES('ECE020','ECEL03','ECE-A',1,2019,'A');
+INSERT INTO takes VALUES('CE020','CE004','CE-C',2,2020,'B');
+select * from takes;
+
+INSERT INTO advisor VALUES('19BCS010','CSE010');
+INSERT INTO advisor VALUES('19BCS020','CSE010');
+INSERT INTO advisor VALUES('20BCS030','CSE020');
+INSERT INTO advisor VALUES('18BME005','ME010');
+INSERT INTO advisor VALUES('20BEC010','ECE010');
+INSERT INTO advisor VALUES('19BBA021','BBA010');
+INSERT INTO advisor VALUES('19BBA051','BBA020');
+INSERT INTO advisor VALUES('19LLB010','LLB020');
+INSERT INTO advisor VALUES('18LLB011','LLB010');
+INSERT INTO advisor VALUES('20LLB020','LLB010');
+INSERT INTO advisor VALUES('19MCS010','CSE030');
+INSERT INTO advisor VALUES('19MCS020','CSE030');
+INSERT INTO advisor VALUES('20MCS012','CSE040');
+INSERT INTO advisor VALUES('20MME002','ME020');
+INSERT INTO advisor VALUES('20MME010','ME020');
+INSERT INTO advisor VALUES('20MEC040','ECE020');
+INSERT INTO advisor VALUES('19MEC011','ECE020');
+select * from advisor;
+
+INSERT INTO time_slot VALUES(1,'Monday','9:30','11:20');
+INSERT INTO time_slot VALUES(2,'Monday','2:30','4:20');
+INSERT INTO time_slot VALUES(3,'Tuesday','9:30','11:20');
+INSERT INTO time_slot VALUES(4,'Tuesday','2:30','4:20');
+INSERT INTO time_slot VALUES(5,'Wednesday','9:30','11:20');
+INSERT INTO time_slot VALUES(6,'Wednesday','2:30','4:20');
+INSERT INTO time_slot VALUES(7,'Thursday','9:30','11:20');
+INSERT INTO time_slot VALUES(8,'Thursday','2:30','4:20');
+INSERT INTO time_slot VALUES(9,'Friday','9:30','11:20');
+INSERT INTO time_slot VALUES(10,'Friday','2:30','4:20');
+select * from time_slot;
+
+INSERT INTO prereq VALUES('CSL001','CSL005');
+INSERT INTO prereq VALUES('CSL004','CSL006');
+INSERT INTO prereq VALUES('BBA002','BBA003');
+INSERT INTO prereq VALUES('ML002','ML005');
+INSERT INTO prereq VALUES('LLB001','LLB003');
+select * from prereq;
+
+
+
+
+select name,dept_name from instructor;
+
+select dept_name from department;
+
+select distinct name,instructor.dept_name,classroom.building 
+from instructor,department, classroom
+where instructor.dept_name = department.dept_name and department.building = classroom.building;
+
+select instructor.ID,instructor.name
+from instructor,takes
+where takes.ID = instructor.ID;
+
+select distinct instructor.name,course.title
+from instructor,takes,course
+where instructor.dept_name = 'BTECH-CSE' and instructor.ID = takes.ID and takes.course_id = course.course_id
+or instructor.dept_name = 'MTECH-CSE' and instructor.ID = takes.ID and takes.course_id = course.course_id;
+
+select i.name 
+from instructor as i , instructor as e
+where i.salary > e.salary and e.dept_name = 'BTECH-CSE';
+
+select dept_name 
+from department 
+where building like '%4%';
+
+select name 
+from instructor
+where dept_name = 'BTECH-CSE' or dept_name = 'MTECH-CSE'
+ORDER BY name ASC;
+
+select distinct course.title,teaches.course_id
+from course,teaches
+where teaches.year = '2019' and teaches.semester % 2 != 0 and teaches.course_id = course.course_id;
+
+select distinct course.title,teaches.course_id
+from course,teaches
+where (teaches.year = '2019' and teaches.semester % 2 != 0 and teaches.course_id = course.course_id)
+union 
+select distinct course.title,teaches.course_id
+from course,teaches
+where (teaches.year = '2020' and teaches.semester % 2 = 0 and teaches.course_id = course.course_id);
+
+select distinct course.title,teaches.course_id
+from course,teaches
+where (teaches.year = '2019' and teaches.semester % 2 != 0 and teaches.course_id = course.course_id)
+AND (teaches.year = '2020' and teaches.semester % 2 = 0 and teaches.course_id = course.course_id);
+
